@@ -1,20 +1,4 @@
-body {
-    background: red;
-}
-
-.search-container {
-    position: relative;
-    border-radius: 10px;
-    margin-left: 0;
-
-
-    .search {
-        padding: 3px;
-        height: 100%;
-        position: absolute;
-        pointer-events: none;
-        display: flex;
-        align-items: center;
-        justify-content: center,
-    }
+.ant-select-selector {
+    border: none !important;
+    border-bottom: 1px solid #d9d9d9 !important;
 }

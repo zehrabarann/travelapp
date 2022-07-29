@@ -1,3 +1,4 @@
+import 'antd/dist/antd.css';
 import './App.css';
 import './style/global.scss'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

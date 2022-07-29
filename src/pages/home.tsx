@@ -1,12 +1,14 @@
-import Header from "../components/header/header"
+import HeaderComponent from "../components/header"
 import List from "../components/list"
+import SelectFindStore from "../components/selectFindStore"
 
 
 const Home = () => {
     return (
         <>
-            <Header />
+            <HeaderComponent />
             <List />
+            <SelectFindStore/>
         </>
     )
 }
