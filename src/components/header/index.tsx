@@ -1,6 +1,5 @@
-import { Layout, Col, Tabs, Row } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Space, Input } from 'antd';
+import { Col, Row } from 'antd';
+import { Input } from 'antd';
 
 
 // const { Header } = Layout;
@@ -8,23 +7,6 @@ import { Dropdown, Menu, Space, Input } from 'antd';
 const { Search } = Input;
 
 function HeaderComponent() {
-
-
-    const onChange = (key: string) => {
-        console.log(key);
-    };
-    const Desing = (
-        <>
-            <Row>
-                <Col span={4} >
-                    resimö
-                </Col>
-                <Col span={20}>
-                    <div className="asd" >logo</div>
-                </Col>
-            </Row>
-        </>
-    )
 
 
     const onSearch = (value: string) => console.log(value);
@@ -42,12 +24,12 @@ function HeaderComponent() {
                         <p>Explore New Places</p>
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
-                    
-                    
+
+
                 </Col>
             </Row>
 
-        
+
 
         </>
     );

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from 'axios'
-import { ILocations, ResultsEntity } from "../../types"
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Space, Card, Select } from 'antd';
+import { Datum, IMapData, IResult } from "../../types"
+import {    Card, Select } from 'antd';
 
 
 const { Meta } = Card;
@@ -11,42 +10,33 @@ interface IProps {
     children: React.ReactNode,
     name: string
     message?: string
+    mapValue: IMapData
 
 }
-interface ICoords {
-    lat: number,
-    lng: number
+interface IPrevProps {
+    current?: IMapData
 }
 const Cards = (props: IProps) => {
 
-    const [data, setData] = useState<ILocations>();
-    const [coords, setCoords] = useState<ICoords>()
+    const [data, setData] = useState<IResult>();
+    const prevProps: IPrevProps = useRef()
 
-    const getData = (coords : ICoords) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getData = () => {
         const options = {
             method: 'GET',
             url: 'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary',
             params: {
-                bl_latitude: '11.847676',
-                //bl_longitude: coords.lng,
-                bl_longitude: '109.095887',
-                tr_longitude: '109.149359',
-                //tr_latitude: coords.lat,
-                tr_latitude: '12.838442',
-                restaurant_tagcategory_standalone: '10591',
-                restaurant_tagcategory: '10591',
-                limit: '30',
-                currency: 'TR',
-                open_now: 'false',
-                lunit: 'km',
-                lang: 'tr-TR'
+                bl_latitude: props.mapValue.bounds.sw.lat,
+                bl_longitude: props.mapValue.bounds.sw.lng,
+                tr_longitude: props.mapValue.bounds.ne.lng,
+                tr_latitude: props.mapValue.bounds.ne.lat,
             },
             headers: {
                 'X-RapidAPI-Key': '1f8843583bmsh21f72fbc5ede34fp13bc40jsnb7a7f3f1d22f',
                 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com'
             }
         };
-
 
         axios.request(options).then(function (response) {
             console.log("json", JSON.stringify(response.data));
@@ -58,39 +48,16 @@ const Cards = (props: IProps) => {
 
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
-            console.log('kişi konumu', coords)
-            if (!!coords) {
-                getData(coords)
-            }
-            setCoords({ lat: latitude, lng: longitude });
-        });
-    }, []);
+        if (prevProps.current !== props.mapValue) {
+            prevProps.current = props.mapValue;
+            getData()
+        }
 
-    const menu = (
-        <Menu
-            items={[
-                {
-                    label: <a href="https://www.antgroup.com">1st menu item</a>,
-                    key: '0',
-                },
-                {
-                    label: <a href="https://www.aliyun.com">2nd menu item</a>,
-                    key: '1',
-                },
-                {
-                    type: 'divider',
-                },
-                {
-                    label: '3rd menu item',
-                    key: '3',
-                },
-            ]}
-        />
-    );
+    }, [props,getData]);
+
     return (
         <>
-            {props.name} 
+            {props.name}
             {props.name}
             {props.children}
             <button >
@@ -98,22 +65,24 @@ const Cards = (props: IProps) => {
 
 
             </button>
-            {data?.data.Typeahead_autocomplete.results?.map((element: ResultsEntity) => {
+            <div className="bg-red-500">
+                {data?.data?.map((element: Datum, index: number) => {
                     return (
-                        <div key={element.documentId}>
-                            {element.text}
-                            
+                        <div className="flex" key={element.location_id + index}>
+
                             <Card hoverable style={{ width: 240 }}
-                                cover={<img alt="example" />}
+                                cover={<img alt="example" src={element.photo?.images.thumbnail.url} height={element.photo?.images.thumbnail.height} width={element.photo?.images.thumbnail.width} />}
                             >
-                                <Meta title={element.text} description="www.instagram.com" />
-                                
+                                <Meta title={element.name} description="www.instagram.com" />
+
                             </Card>
 
                         </div>
                     )
 
                 })}
+
+            </div>
             <div>
                 <Select defaultValue="restaurants" style={{ width: 400 }}>
                     <Option value="restaurants">Restaurants</Option>

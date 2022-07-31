@@ -1,11 +1,15 @@
+import { IMapData } from "../../types"
 import Cards from "../cards"
 
-const List = () => {
-    return(
+interface IProps {
+    mapValue: IMapData
+}
+const List = (props: IProps) => {
+    return (
         <>
-        <Cards name="asd">
-            <span>sdasd</span>
-        </Cards>
+            <Cards mapValue={props.mapValue} name="asd">
+                <span>sdasd</span>
+            </Cards>
         </>
     )
 }
