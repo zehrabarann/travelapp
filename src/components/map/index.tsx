@@ -4,13 +4,14 @@ import { IMapData } from "../../types";
 
 const AnyReactComponent = ({ text }: any) => <div>{text}</div>;
 
-export default function SimpleMap({ setMapChange } : any) {
+export default function SimpleMap({ setMapChange, setData } : any) {
 
 
     const [defaultProps, setDefaultProps] = useState({
         center: {
             lat: 38.99835602,
             lng: 35.01502627
+            
         },
         zoom: 11
     })

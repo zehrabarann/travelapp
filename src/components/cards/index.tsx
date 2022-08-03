@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import axios from 'axios'
 import { Datum, IMapData, IResult } from "../../types"
-import {    Card, Select } from 'antd';
+import { Card, Select, Rate } from 'antd';
+import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons';
 
 
 const { Meta } = Card;
@@ -16,16 +17,19 @@ interface IProps {
 interface IPrevProps {
     current?: IMapData
 }
+
 const Cards = (props: IProps) => {
 
     const [data, setData] = useState<IResult>();
     const prevProps: IPrevProps = useRef()
+    const [type, setType] = useState('restaurants')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getData = () => {
-        const options = {
+    const getData = (type: string, rating?: number) => {
+        const isRating = !!rating;
+        const options: any = {
             method: 'GET',
-            url: 'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary',
+            url: `https://travel-advisor.p.rapidapi.com/${type}/list-in-boundary`,
             params: {
                 bl_latitude: props.mapValue.bounds.sw.lat,
                 bl_longitude: props.mapValue.bounds.sw.lng,
@@ -37,9 +41,12 @@ const Cards = (props: IProps) => {
                 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com'
             }
         };
+        if (isRating) {
+            options.params.min_rating = rating
+        }
 
         axios.request(options).then(function (response) {
-            console.log("json", JSON.stringify(response.data));
+            // console.log("json", JSON.stringify(response.data));
             setData(response.data)
         }).catch(function (error) {
             console.error(error);
@@ -50,56 +57,112 @@ const Cards = (props: IProps) => {
     useEffect(() => {
         if (prevProps.current !== props.mapValue) {
             prevProps.current = props.mapValue;
-            getData()
+            getData('restaurants')
+        }
+    }, [props, getData]);
+
+    const onTypeChange = (e: string) => {
+        setType(e);
+        getData(e)
+    }
+
+    const onRatingChange = (e: string) => {
+        if (e !== "1") {
+            getData(type, parseInt(e));
+        }
+        else {
+            getData(type);
         }
 
-    }, [props,getData]);
+    }
 
     return (
         <>
-            {props.name}
-            {props.name}
-            {props.children}
-            <button >
-                Tılla
-
-
-            </button>
-            <div className="bg-red-500">
-                {data?.data?.map((element: Datum, index: number) => {
-                    return (
-                        <div className="flex" key={element.location_id + index}>
-
-                            <Card hoverable style={{ width: 240 }}
-                                cover={<img alt="example" src={element.photo?.images.thumbnail.url} height={element.photo?.images.thumbnail.height} width={element.photo?.images.thumbnail.width} />}
-                            >
-                                <Meta title={element.name} description="www.instagram.com" />
-
-                            </Card>
-
-                        </div>
-                    )
-
-                })}
-
-            </div>
             <div>
-                <Select defaultValue="restaurants" style={{ width: 400 }}>
+                <h3 className="text-[30px] font-medium">Food & Dining Around You</h3>
+            </div>
+
+            <div className="flex my-[20px]">
+
+                <Select id="type" defaultValue={type} onChange={onTypeChange} style={{ width: 150 }} className='mr-4'>
                     <Option value="restaurants">Restaurants</Option>
                     <Option value="hotels">Hotels</Option>
                     <Option value="attractions">Attractions</Option>
                 </Select>
 
-                <Select defaultValue="raiting" style={{ width: 400 }}>
-                    <Option value="all">All</Option>
-                    <Option value="raiting3">3.0</Option>
-                    <Option value="raiting4">4.0</Option>
-                    <Option value="raiting4.5">4.5</Option>
+                <Select id="rating" defaultValue={'All'} onChange={onRatingChange} style={{ width: 150 }}>
+                    <Option value="1">All</Option>
+                    <Option value="3">3.0</Option>
+                    <Option value="4">4.0</Option>
+                    <Option value="5">4.5</Option>
                 </Select>
 
             </div>
+            <div className="px-[15px] pl-0">
+                {data?.data?.map((element: Datum, index: number) => {
+                    return (
+                        <div className="pb-4 " key={element.location_id + index}>
+
+                            <Card className="rounded-[10px] shadow-md hover:rounded-[10px]"
+                                cover={<img alt="example" src={element.photo?.images.large.url} height={element.photo?.images.large.height} width={element.photo?.images.large.width} />}
+                            >
+                                <Meta title={element.name} className='text-[20px] mb-4' />
+                                <div className="flex items-center justify-between">
+                                    <Rate allowHalf value={Number(element.rating)} disabled />
+                                    <p>{element.rating}</p>
+                                    <span className="flex">{element.num_reviews}
+                                        <p className="pl-2">reviews</p>
+                                    </span>
+                                </div>
+                                <div className="flex justify-between my-2">
+                                    <h6>Price</h6>
+                                    <p>{element.price}</p>
+                                </div>
+                                <div className="flex justify-between my-2">
+                                    <h6>Ranking</h6>
+                                    <p>{element.ranking}</p>
+                                </div>
+                                <div>
+                                    {element?.awards?.map((award) => (
+                                        <div className="flex justify-between items-center">
+                                            <img src={award.images.small} alt="awards" />
+                                            <p>{award.display_name}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex my-2">
+                                    {element?.cuisine?.map((cuisine) => (
+                                        <div className="flex justify-between items-center bg-[#e0e0e0] rounded-[16px] p-[5px] mr-2">
+                                            <p>{cuisine.name}</p>
+                                        </div>
+                                    ))}
+
+                                </div>
+
+                                <div className="flex justify-between items-center my-1">
+                                    <EnvironmentOutlined style={{ fontSize: '16px', color: '#0000008a' }} />
+                                    <p className="text-[#626262] text-end">{element.address}</p>
+                                </div>
+
+                                <div className="flex justify-between items-center my-1">
+                                    <PhoneOutlined style={{ fontSize: '16px', color: '#0000008a' }} />
+                                    <p className="text-[#626262]">{element.phone}</p>
+
+                                </div>
+
+                                <div>
+                                    <a href={element.web_url} className='uppercase text-[#0648d7] mr-[5px] p-2 hover:bg-[#3f51b50a] hover:text-[#0648d7]'>Trip Advisor</a>
+                                    <a href={element.website} className='uppercase text-[#0648d7] p-2 hover:text-[#0648d7] hover:bg-[#3f51b50a]'>Web Site</a>
+                                </div>
+                            </Card>
+                        </div>
+                    )
+                })}
 
 
+
+            </div>
 
         </>
     )

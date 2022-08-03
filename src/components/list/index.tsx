@@ -7,8 +7,7 @@ interface IProps {
 const List = (props: IProps) => {
     return (
         <>
-            <Cards mapValue={props.mapValue} name="asd">
-                <span>sdasd</span>
+            <Cards mapValue={props.mapValue} name="asd" >
             </Cards>
         </>
     )

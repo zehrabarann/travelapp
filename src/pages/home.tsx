@@ -1,3 +1,4 @@
+import { Col, Row } from "antd"
 import { useState } from "react"
 import HeaderComponent from "../components/header"
 import List from "../components/list"
@@ -14,9 +15,17 @@ const Home = () => {
     return (
         <>
             <HeaderComponent />
-            <List mapValue={mapChange} />
+            <div>
+                <Row className="p-[20px]">
+                    <Col span={8} className='h-[100vh] w-full overflow-y-scroll'>
+                        <List mapValue={mapChange} />
+                    </Col>
+                    <Col span={16}>
+                        <MainMap setMapChange={setMapChange} />
+                    </Col>
+                </Row>
+            </div>
             <SelectFindStore />
-            <MainMap setMapChange={setMapChange} />
         </>
     )
 }

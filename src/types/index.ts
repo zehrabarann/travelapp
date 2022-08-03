@@ -283,6 +283,7 @@ export interface IMapData {
   bounds:       Bounds;
   marginBounds: Bounds;
   size:         Size;
+
 }
 
 export interface Bounds {
@@ -290,6 +291,7 @@ export interface Bounds {
   se: Center;
   sw: Center;
   ne: Center;
+  
 }
 
 export interface Center {
@@ -301,3 +303,5 @@ export interface Size {
   width:  number;
   height: number;
 }
+
+

@@ -41,3 +41,21 @@
     transform: rotate(360deg);
   }
 }
+
+.ant-card-meta-title {
+  font-size: 22px;
+}
+
+.ant-input {
+  border: none;
+  background-color: #08183b61;
+}
+
+.ant-select:hover, .ant-select-selector:hover {
+  border-color: black;
+}
+
+.ant-select-focused {
+  box-shadow: none;
+  border-bottom: 1px solid black;
+}

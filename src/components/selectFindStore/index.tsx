@@ -3,7 +3,7 @@ import { Row, Col } from "antd"
 const SelectFindStore = () => {
     return(
         <>
-        <Row>
+        {/* <Row>
             <Col span={8} className='bg-blue-700'>
 
                 List
@@ -13,7 +13,7 @@ const SelectFindStore = () => {
                  Map
             </Col>
 
-        </Row>
+        </Row> */}
 
         </>
     )
