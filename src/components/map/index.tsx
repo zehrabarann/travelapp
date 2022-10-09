@@ -1,10 +1,11 @@
 import  { useEffect, useState } from "react";
 import GoogleMapReact from 'google-map-react';
 import { IMapData } from "../../types";
+import Cards from "../cards";
 
 const AnyReactComponent = ({ text }: any) => <div>{text}</div>;
 
-export default function SimpleMap({ setMapChange, setData } : any) {
+export default function SimpleMap({ setMapChange, setData, data } : any) {
 
 
     const [defaultProps, setDefaultProps] = useState({
@@ -39,13 +40,17 @@ export default function SimpleMap({ setMapChange, setData } : any) {
                     setMapChange(map)
                     // console.log(JSON.stringify(e))
                 }}
-            >
+
+                >
                 {/* Marker */}
                 <AnyReactComponent
                     lat={59.955413}
                     lng={30.337844}
                     text="My Marker"
                 />
+
+                
+
             </GoogleMapReact>
         </div>
     );

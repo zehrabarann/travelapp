@@ -104,7 +104,7 @@ const Cards = (props: IProps) => {
                         <div className="pb-4 " key={element.location_id + index}>
 
                             <Card className="rounded-[10px] shadow-md hover:rounded-[10px]"
-                                cover={<img alt="example" src={element.photo?.images.large.url} height={element.photo?.images.large.height} width={element.photo?.images.large.width} />}
+                                cover={<img className="h-[310px]" alt="example" src={element.photo?.images.large.url} height={element.photo?.images.large.height} width={element.photo?.images.large.width} />}
                             >
                                 <Meta title={element.name} className='text-[20px] mb-4' />
                                 <div className="flex items-center justify-between">
@@ -159,11 +159,7 @@ const Cards = (props: IProps) => {
                         </div>
                     )
                 })}
-
-
-
             </div>
-
         </>
     )
 }

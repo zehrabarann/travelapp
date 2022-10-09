@@ -17,10 +17,10 @@ const Home = () => {
             <HeaderComponent />
             <div>
                 <Row className="p-[20px]">
-                    <Col span={8} className='h-[100vh] w-full overflow-y-scroll'>
+                    <Col span={7} className='h-[100vh] w-full overflow-y-scroll'>
                         <List mapValue={mapChange} />
                     </Col>
-                    <Col span={16}>
+                    <Col span={17}>
                         <MainMap setMapChange={setMapChange} />
                     </Col>
                 </Row>
