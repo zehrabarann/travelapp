@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import axios from 'axios'
 import { Datum, IMapData, IResult } from "../../types"
 import { Card, Select, Rate } from 'antd';
 import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons';
-
-
+import PlacesContext, { IGlobalVaribles, PlacesContextType } from "../../context/PlacesContext";
 const { Meta } = Card;
 const { Option } = Select;
 interface IProps {
@@ -14,15 +13,15 @@ interface IProps {
     mapValue: IMapData
 
 }
-interface IPrevProps {
-    current?: IMapData
-}
+
 
 const Cards = (props: IProps) => {
+    const { data, setData, type, setType }: any = useContext(PlacesContext);
 
-    const [data, setData] = useState<IResult>();
-    const prevProps: IPrevProps = useRef()
-    const [type, setType] = useState('restaurants')
+
+    // const [data, setData] = useState<IResult>();
+    const prevProps: any = useRef()
+    // const [type, setType] = useState('restaurants')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getData = (type: string, rating?: number) => {
@@ -83,23 +82,29 @@ const Cards = (props: IProps) => {
             </div>
 
             <div className="flex my-[20px]">
+                <div className="flex flex-col">
+                    <label>Type</label>
+                    <Select id="type" defaultValue={type} onChange={onTypeChange} style={{ width: 150 }} className='mr-4'>
+                        <Option value="restaurants">Restaurants</Option>
+                        <Option value="hotels">Hotels</Option>
+                        <Option value="attractions">Attractions</Option>
+                    </Select>
 
-                <Select id="type" defaultValue={type} onChange={onTypeChange} style={{ width: 150 }} className='mr-4'>
-                    <Option value="restaurants">Restaurants</Option>
-                    <Option value="hotels">Hotels</Option>
-                    <Option value="attractions">Attractions</Option>
-                </Select>
+                </div>
 
-                <Select id="rating" defaultValue={'All'} onChange={onRatingChange} style={{ width: 150 }}>
-                    <Option value="1">All</Option>
-                    <Option value="3">3.0</Option>
-                    <Option value="4">4.0</Option>
-                    <Option value="5">4.5</Option>
-                </Select>
+                <div className="flex flex-col">
+                    <label>Rating</label>
+                    <Select id="rating" defaultValue={'All'} onChange={onRatingChange} style={{ width: 150 }}>
+                        <Option value="1">All</Option>
+                        <Option value="3">3.0</Option>
+                        <Option value="4">4.0</Option>
+                        <Option value="5">4.5</Option>
+                    </Select>
+                </div>
 
             </div>
             <div className="px-[15px] pl-0">
-                {data?.data?.map((element: Datum, index: number) => {
+                {!!data && data?.data?.map((element: Datum, index: number) => {
                     return (
                         <div className="pb-4 " key={element.location_id + index}>
 

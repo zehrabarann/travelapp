@@ -1,18 +1,19 @@
-import  { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react"
 import GoogleMapReact from 'google-map-react';
-import { IMapData } from "../../types";
-import Cards from "../cards";
+import { IMapData, Datum } from "../../types";
+import PlacesContext from "../../context/PlacesContext";
 
-const AnyReactComponent = ({ text }: any) => <div>{text}</div>;
+// const AnyReactComponent = ({ text }: any) => <div>{text}</div>;
 
-export default function SimpleMap({ setMapChange, setData, data } : any) {
+export default function SimpleMap({ setMapChange }: any) {
+    const { data }: any = useContext(PlacesContext);
 
 
     const [defaultProps, setDefaultProps] = useState({
         center: {
             lat: 38.99835602,
             lng: 35.01502627
-            
+
         },
         zoom: 11
     })
@@ -29,29 +30,45 @@ export default function SimpleMap({ setMapChange, setData, data } : any) {
         });
     }, [])
 
+    console.log("data", data)
+    const renderMarkers = (map: any, maps: any) => {
+        const markers = data?.data?.map((element: Datum, index: number) => {
+            let marker = new maps.Marker({
+                position: { lat: Number(element.latitude), lng: Number(element.longitude) },
+                map,
+                title: element.name,
+                icon: element.photo?.images.thumbnail.url,
 
-    return (
-        <div style={{ height: '100vh', width: '100%' }}>
-            <GoogleMapReact
-                bootstrapURLKeys={{ key: "AIzaSyCVEhzYQrn3ZXwme5xiYUR5xYXR1PK8b8M" }}
-                defaultCenter={defaultProps.center}
-                defaultZoom={defaultProps.zoom}
-                onChange={(map : IMapData) => {
-                    setMapChange(map)
-                    // console.log(JSON.stringify(e))
-                }}
+            });
+            return marker
+        })
+        console.log('markers', markers)
+        return markers
+    }
+    // const MarkersC = (lang: any, lng: any, text: string) => <div className="contact">{text}</div>;
 
+    if (!!data) {
+        return (
+            <div style={{ height: '100vh', width: '100%' }}>
+                <GoogleMapReact
+                    bootstrapURLKeys={{ key: "AIzaSyCVEhzYQrn3ZXwme5xiYUR5xYXR1PK8b8M" }}
+                    defaultCenter={defaultProps.center}
+                    defaultZoom={defaultProps.zoom}
+                    onGoogleApiLoaded={({ map, maps }) => {
+                        renderMarkers(map, maps)
+                    }}
+                    onChange={(map: IMapData) => {
+                        setMapChange(map)
+                        // console.log(JSON.stringify(e))
+                    }}
                 >
-                {/* Marker */}
-                <AnyReactComponent
-                    lat={59.955413}
-                    lng={30.337844}
-                    text="My Marker"
-                />
-
-                
-
-            </GoogleMapReact>
-        </div>
-    );
+                </GoogleMapReact>
+            </div>
+        );
+    }
+    else {
+        return (
+            <>Loading</>
+        )
+    }
 }

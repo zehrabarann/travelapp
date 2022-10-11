@@ -1,6 +1,5 @@
 import { Col, Row } from 'antd';
 import { Input } from 'antd';
-import axios from 'axios';
 import { useState } from 'react';
 
 const { Search } = Input;
@@ -13,8 +12,11 @@ function HeaderComponent(lat: any, lng: any) {
     const onLoad = (autoC: any) => setAutocomplete(autoC);
 
     const onChange = (e: any) => {
-        setSearch(e.target.value)
-        console.log(setSearch)
+        // setSearch(e.target.value)
+        // console.log(setSearch)
+        // const lat = autocomplete.getPlace().geometry.location.lat();
+        // const lng = autocomplete.getPlace().geometry.location.lng();
+
     }
 
     return (
@@ -29,10 +31,7 @@ function HeaderComponent(lat: any, lng: any) {
                     <div className='flex justify-end items-center'>
                         <p className='text-white text-[15px] font-semibold pr-5'>Explore New Places</p>
                         <Search placeholder="input search text" onChange={onChange} onLoad={onLoad} style={{ width: 200 }} />
-
                     </div>
-
-
                 </Col>
             </Row>
         </>

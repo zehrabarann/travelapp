@@ -3,7 +3,6 @@ import { useState } from "react"
 import HeaderComponent from "../components/header"
 import List from "../components/list"
 import MainMap from "../components/map"
-import SelectFindStore from "../components/selectFindStore"
 import { IMapData } from "../types"
 
 
@@ -25,7 +24,6 @@ const Home = () => {
                     </Col>
                 </Row>
             </div>
-            <SelectFindStore />
         </>
     )
 }
